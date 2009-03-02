@@ -660,6 +660,12 @@ module Sinatra
         }
       end
 
+      def other_condition(cond)
+        condition {
+          instance_eval(&cond)
+        }
+      end
+
     public
       def get(path, opts={}, &block)
         conditions = @conditions.dup
@@ -679,6 +685,7 @@ module Sinatra
         host_name  opts[:host]  if opts.key?(:host)
         user_agent opts[:agent] if opts.key?(:agent)
         accept_mime_types opts[:provides] if opts.key?(:provides)
+        other_condition opts[:condition] if opts.key?(:condition)
 
         pattern, keys = compile(path)
         conditions, @conditions = @conditions, []
